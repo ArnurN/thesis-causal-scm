@@ -10,12 +10,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 print("\n" + "="*90)
-print(" 🚀 PHASE 8: TRUE CAUSAL PIPELINE (ECONML + OPERATIONS RESEARCH)")
 print("="*90)
 
-# ==============================================================================
-# PART 1: DATA INGESTION & PREPROCESSING
-# ==============================================================================
 print("[1] Loading Data and Preparing Confounders...")
 df = pd.read_csv('cleaned_m5_data.csv')
 
@@ -28,11 +24,8 @@ active_items = item_sales[item_sales['units_sold'] >= 1.0]['item_id'].tolist()
 df_active = df[df['item_id'].isin(active_items)]
 
 sampled_items = df_active['item_id'].unique()
-print(f"✅ Successfully isolated {len(sampled_items)} high-liquidity items.")
+print(f" Successfully isolated {len(sampled_items)} high-liquidity items.")
 
-# ==============================================================================
-# PART 2: THE THEORETICAL SCM LOGIC
-# ==============================================================================
 def get_inventory_costs(dept_id, retail_price):
     if 'FOODS' in dept_id:
         c, h, b = retail_price * 0.75, (retail_price * 0.75) * 0.30, retail_price * 1.50
@@ -42,9 +35,6 @@ def get_inventory_costs(dept_id, retail_price):
         c, h, b = retail_price * 0.50, (retail_price * 0.50) * 0.20, retail_price * 0.80
     return c, h, b
 
-# ==============================================================================
-# PART 3: THE TRUE DML ENGINE
-# ==============================================================================
 print("[3] Booting Double Machine Learning Engine. This will take several minutes...\n")
 
 master_results = []
@@ -67,9 +57,6 @@ for item in tqdm(sampled_items, desc="Calculating True Causal Elasticity & Optim
         
     cv = historical_sigma / baseline_demand
     
-    # -------------------------------------------------------------------------
-    # THE TRUE MACHINE LEARNING EXTRACTION
-    # -------------------------------------------------------------------------
     Y = item_data['units_sold']  # Outcome: Demand
     T = item_data['sell_price']  # Treatment: Price
     W = item_data[['is_holiday', 'snap_CA', 'wday', 'month']] # Confounders
@@ -88,9 +75,6 @@ for item in tqdm(sampled_items, desc="Calculating True Causal Elasticity & Optim
     # Apply the Law of Demand (Fixing the Infinite Money Glitch)
     elasticity = max(-100.0, min(-0.01, raw_elasticity))
     
-    # -------------------------------------------------------------------------
-    # OPERATIONS RESEARCH CO-OPTIMIZATION
-    # -------------------------------------------------------------------------
     c, h, b = get_inventory_costs(dept_id, current_price)
     
     def evaluate_state(p, S):
@@ -135,15 +119,10 @@ for item in tqdm(sampled_items, desc="Calculating True Causal Elasticity & Optim
         'SS_Reduction_Pct': ((ss_joint - ss_siloed) / max(0.01, abs(ss_siloed))) * 100
     })
 
-# ==============================================================================
-# PART 4: EXPORT
-# ==============================================================================
 results_df = pd.DataFrame(master_results)
 results_df.to_csv('final_thesis_results_REAL.csv', index=False)
 
 print("\n" + "="*90)
-print(" ✅ TRUE CAUSAL PIPELINE COMPLETE. Data saved to 'final_thesis_results_REAL.csv'")
-print("\n[ REAL MACRO SUMMARY FOR THESIS ]")
 print(f"Total Items Optimized: {len(results_df)}")
 print(f"Average Profit Growth: {results_df['Profit_Delta_Pct'].mean():.2f}%")
 print(f"Average Safety Stock Reduction: {results_df['SS_Reduction_Pct'].mean():.2f}%")
