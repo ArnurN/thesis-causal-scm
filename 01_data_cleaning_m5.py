@@ -4,7 +4,6 @@ import warnings
 warnings.filterwarnings('ignore')
 
 print("\n" + "="*80)
-print(" 🧹 PHASE 1 & 2: DATA ENGINEERING & SAMPLING")
 print("="*80)
 
 # 1. Load the raw Kaggle datasets
@@ -14,12 +13,12 @@ try:
     prices = pd.read_csv('sell_prices.csv')
     sales = pd.read_csv('sales_train_validation.csv')
 except FileNotFoundError:
-    print("❌ ERROR: Raw Kaggle files not found. Ensure 'calendar.csv', 'sell_prices.csv', and 'sales_train_validation.csv' are in the directory.")
+    print("Raw Kaggle files not found.")
     exit()
 
 # 2. Stratified Sampling (Pre-Melt to save RAM)
 print("[2] Executing Stratified Sampling on raw items...")
-# Let's filter to just one store to keep the geographical economics consistent (e.g., California Store 1)
+# Filter to just one store to keep the geographical economics consistent (e.g., California Store 1)
 sales = sales[sales['store_id'] == 'CA_1']
 
 # Sample 10000 items stratified by category (Version-Proof Method)
@@ -35,7 +34,7 @@ for dept in sales['dept_id'].unique():
 
 # Filter the main dataframe using our selected items
 sampled_sales = sales[sales['item_id'].isin(sampled_item_ids)]
-print(f"✅ Extracted {len(sampled_item_ids)} items.")
+print(f" Extracted {len(sampled_item_ids)} items.")
 
 # 3. Data Transformation (Melting Wide to Long)
 print("[3] Melting sales data from Wide to Long format...")
@@ -64,6 +63,5 @@ print("[6] Saving to 'cleaned_m5_data.csv'...")
 sales_long.to_csv('cleaned_m5_data.csv', index=False)
 
 print("\n" + "="*80)
-print(f" ✅ DATA ENGINEERING COMPLETE. Dataset size: {len(sales_long)} rows.")
-print(" ✅ 'cleaned_m5_data.csv' is ready for Phase 8.")
+print(f"  Dataset size: {len(sales_long)} rows.")
 print("="*80 + "\n")
