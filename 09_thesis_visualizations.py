@@ -5,9 +5,6 @@ import os
 
 print("Booting Macro-Level Thesis Visualizations (File 9) [UPDATED]...")
 
-# ==============================================================================
-# 1. LOAD THE DATA
-# ==============================================================================
 file_name = 'final_thesis_results_REAL.csv'
 
 if not os.path.exists(file_name):
@@ -16,17 +13,11 @@ if not os.path.exists(file_name):
 
 df = pd.read_csv(file_name)
 
-# ==============================================================================
-# 2. GLOBAL VISUALIZATION SETTINGS
-# ==============================================================================
 sns.set_theme(style="whitegrid", context="paper", font_scale=1.2)
-color_siloed = "#E74C3C"  # Red
-color_joint = "#2ECC71"   # Green
-color_neutral = "#3498DB" # Blue
+color_siloed = "#E74C3C"  
+color_joint = "#2ECC71"   
+color_neutral = "#3498DB" 
 
-# ==============================================================================
-# 3. CHART 1: THE PROFIT BOXPLOT (H1 Validation) - SEABORN SYNTAX FIXED
-# ==============================================================================
 plt.figure(figsize=(8, 6))
 profit_data = pd.melt(df, value_vars=['Siloed_Profit', 'Joint_Profit'], 
                       var_name='Strategy', value_name='Expected Profit ($)')
@@ -42,10 +33,6 @@ plt.xlabel('Operational Strategy')
 plt.tight_layout()
 plt.savefig('Chart_1_Profit_Boxplot.png', dpi=300)
 plt.close()
-
-# ==============================================================================
-# 4. CHART 2: THE BULLWHIP HISTOGRAM (Safety Stock Reduction)
-# ==============================================================================
 plt.figure(figsize=(8, 6))
 clean_ss_reduction = df['SS_Reduction_Pct'].dropna()
 
@@ -60,10 +47,6 @@ plt.legend()
 plt.tight_layout()
 plt.savefig('Chart_2_Bullwhip_Histogram.png', dpi=300)
 plt.close()
-
-# ==============================================================================
-# 5. CHART 3: CAUSAL ELASTICITY DISTRIBUTION (Upgraded for Thesis)
-# ==============================================================================
 plt.figure(figsize=(8, 6))
 
 # Filter out extreme outliers for a clean academic distribution plot
@@ -81,5 +64,3 @@ plt.legend()
 plt.tight_layout()
 plt.savefig('Chart_3_Elasticity_Distribution.png', dpi=300)
 plt.close()
-
-print("✅ Success! Charts 1, 2, and 3 saved flawlessly as high-resolution PNGs.")
